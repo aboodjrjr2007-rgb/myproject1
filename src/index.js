@@ -1,18 +1,21 @@
+import dotenv from "dotenv"
+
 import express from "express";
 
 import mongoose from "mongoose";
 import Product from "./models/product.js";
 
-import 'dotenv/config'
 
+dotenv.config()
 const app = express();
+
 app.use(express.json());
 
 
 mongoose
-  .connect("Mongo_URL")
+  .connect(process.env.MONGO_URL)
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log("Connected to MongoDB")
   })
   .catch((err) => {
     console.error(err);
