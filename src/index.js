@@ -5,7 +5,6 @@ import express from "express";
 import mongoose from "mongoose";
 import Product from "./models/product.js";
 
-
 dotenv.config()
 const app = express();
 
@@ -21,21 +20,38 @@ mongoose
     console.error(err);
   });
 
+
 app.post("/addProducts", async (req, res) => {
   const newProduct = await Product.create(req.body);
+  try{
+if(newProduct.req.body.messages>10 ||newProduct.req.body.messages<0 ){
+  console.log("u put a wrong number")
+}
+else {
+  console.log("weeeeee")
+}
+  }catch(error){
+    console.error(error)
+  }
 
   res.status(201).send(newProduct);
 });
+
+
 app.get("/GetSpeceifcProducts/:id", async (req, res) => {
   const id = req.params.id;
   const product = await Product.findById(id);
   res.json(product);
 });
 
+
+
 app.get("/allProducts", async (req, res) => {
   const allProducts = await Product.find();
   res.json(allProducts);
 });
+
+
 
 app.patch("/updateProducts/:id", async (req, res) => {
   try {
@@ -49,11 +65,15 @@ app.patch("/updateProducts/:id", async (req, res) => {
   }
 });
 
+
+
 app.delete("/deleteSpecificProduct/:id", async (req, res) => {
   const id = req.params.id;
   const product = await Product.findByIdAndDelete(id);
   res.json(product);
 });
+
+
 
 
 app.delete("/deleteAllProduct", async (req, res) => {
@@ -62,11 +82,14 @@ app.delete("/deleteAllProduct", async (req, res) => {
 });
 
 
+
 app.get("/getAllAvilableProducts", async(req,res) => {
   const product = await Product.find({available : true});
 
   res.send(product)
 })
+
+
 
 app.get("/getNotAllAvilableProducts", async(req,res) => {
   
@@ -75,9 +98,10 @@ app.get("/getNotAllAvilableProducts", async(req,res) => {
   res.send(product)
 })
 
+
+
 app.get("/getProductByName/:name", async(req,res) => {
   
-
 const product = await Product.find({name : req.params.name});
 
   res.json(product)
@@ -92,6 +116,9 @@ app.get("/getProductByCatagory/:catagory", async(req,res) => {
   res.json(product)
 })
 
+app.get("/",(req,res) => {
+  res.render("home")
+})
 
 app.listen(3000, () => {
   console.log("App is listening on port 3000");
